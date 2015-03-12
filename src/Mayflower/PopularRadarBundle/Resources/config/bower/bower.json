@@ -1,0 +1,8 @@
+{
+  "name": "popular-radar",
+  "version": "0.1",
+  "dependencies": {
+    "jquery": "~2.1",
+    "bootstrap": "~3.2"
+  }
+}
