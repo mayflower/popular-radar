@@ -1,0 +1,11 @@
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+<form action="{{ path('mayflower_popularradar_radardashboard_index') }}" method="post">
+    {{ form_widget(form) }}
+
+    <p>
+        <button type="submit" class="btn btn-primary">Compare!</button>
+    </p>
+</form>
+
+{{ form(form) }}

@@ -26,7 +26,7 @@ class GitHubForksStrategy implements StrategyInterface
      */
     public function supports(BuzzwordFormData $formData)
     {
-        return $formData->isGithubStars();
+        return $formData->isGithubForks();
     }
 
     /**
@@ -42,14 +42,14 @@ class GitHubForksStrategy implements StrategyInterface
      */
     public function apply(BuzzwordFormData $formData)
     {
-        $type = 'star(s)';
+        $type = 'fork(s)';
 
-        $buzzword1 = $this->findStarsFromRepository($formData->getBuzzword1());
-        $buzzword2 = $this->findStarsFromRepository($formData->getBuzzword2());
+        $buzzword1 = $this->findRepository($formData->getBuzzword1());
+        $buzzword2 = $this->findRepository($formData->getBuzzword2());
 
         return array(
-            new Buzzword($formData->getBuzzword1(), $buzzword1, $type),
-            new Buzzword($formData->getBuzzword2(), $buzzword2, $type)
+            new Buzzword($buzzword1['owner']['login'] . '/' . $buzzword1['name'], $buzzword1['forks_count'], $type),
+            new Buzzword($buzzword2['owner']['login'] . '/' . $buzzword2['name'], $buzzword2['forks_count'], $type)
         );
     }
 
@@ -62,7 +62,7 @@ class GitHubForksStrategy implements StrategyInterface
      *
      * @throws NoResultsException
      */
-    private function findStarsFromRepository($buzzword)
+    private function findRepository($buzzword)
     {
         $request = $this->client->get(
             sprintf(
@@ -78,10 +78,6 @@ class GitHubForksStrategy implements StrategyInterface
 
         $first = $response['items'][0];
 
-        return count(
-            $this->client->get(
-                sprintf('https://api.github.com/repos/%s/%s/stargazers', $first['owner']['login'], $first['name'])
-            )->send()->json()
-        );
+        return $first;
     }
 }

@@ -2,5 +2,3 @@ mayflower_popular_radar:
     resource: "@MayflowerPopularRadarBundle/Controller/"
     type:     annotation
     prefix:   /
-
-

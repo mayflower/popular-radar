@@ -30,9 +30,9 @@ twig:
 
 # Assetic Configuration
 assetic:
-    debug:          "%kernel.debug%"
+    debug:          false
     use_controller: false
-    bundles:        [ ]
+    bundles:        [ MayflowerPopularRadarBundle ]
     #java: /usr/bin/java
     filters:
         cssrewrite: ~

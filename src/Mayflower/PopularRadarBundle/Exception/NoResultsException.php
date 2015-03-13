@@ -2,8 +2,11 @@
 
 namespace Mayflower\PopularRadarBundle\Exception;
 
-
-class NoResultsException
+/**
+ * NoResultsException
+ *
+ * @author Maximilian Bosch <ma27.git@gmail.com>
+ */
+class NoResultsException extends \InvalidArgumentException
 {
-
 }
