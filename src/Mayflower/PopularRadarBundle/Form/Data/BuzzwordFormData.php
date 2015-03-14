@@ -24,12 +24,12 @@ class BuzzwordFormData
     /**
      * @var bool
      */
-    private $googleTrends = false;
+    private $githubForks = false;
 
     /**
      * @var bool
      */
-    private $githubForks = false;
+    private $stackoverflowQuestions = false;
 
     /**
      * @return string
@@ -82,16 +82,16 @@ class BuzzwordFormData
     /**
      * @return boolean
      */
-    public function isGoogleTrends()
+    public function isStackoverflowQuestions()
     {
-        return $this->googleTrends;
+        return $this->stackoverflowQuestions;
     }
 
     /**
-     * @param boolean $googleTrends
+     * @param boolean $stackoverflowQuestions
      */
-    public function setGoogleTrends($googleTrends)
+    public function setStackoverflowQuestions($stackoverflowQuestions)
     {
-        $this->googleTrends = (bool) $googleTrends;
+        $this->stackoverflowQuestions = (bool) $stackoverflowQuestions;
     }
 }

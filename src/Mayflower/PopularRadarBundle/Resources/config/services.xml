@@ -18,7 +18,7 @@
 
             <call method="addStrategy">
                 <argument type="service">
-                    <service class="Mayflower\PopularRadarBundle\Service\Strategy\GoogleTrendsStrategy" />
+                    <service class="Mayflower\PopularRadarBundle\Service\Strategy\StackoverflowQuestionStrategy" />
                 </argument>
             </call>
         </service>

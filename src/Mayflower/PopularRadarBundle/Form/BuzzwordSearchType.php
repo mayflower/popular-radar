@@ -31,7 +31,11 @@ class BuzzwordSearchType extends AbstractType
             ->add('buzzword1', 'text', array('label' => 'First Buzzword'))
             ->add('buzzword2', 'text', array('label' => 'Second Buzzword'))
             ->add('githubForks', 'checkbox', array('label' => 'Compare GitHub Forks', 'required' => false))
-            ->add('googleTrends', 'checkbox', array('label' => 'Compare Google Trends', 'required' => false))
+            ->add(
+                'stackoverflowQuestions',
+                'checkbox',
+                array('label' => 'Compare Stackoverflow questions', 'required' => false)
+            )
         ;
     }
 }
