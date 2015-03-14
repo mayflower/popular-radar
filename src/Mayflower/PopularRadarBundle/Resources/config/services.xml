@@ -6,19 +6,21 @@
 
     <parameters>
         <parameter key="mayflower.radar.api_strategy.class">Mayflower\PopularRadarBundle\Service\ApiComparatorStrategy</parameter>
+        <parameter key="mayflower.strategy.github_forks.class">Mayflower\PopularRadarBundle\Service\Strategy\GitHubForksStrategy</parameter>
+        <parameter key="mayflower.strategy.stackoverflow_questions.class">Mayflower\PopularRadarBundle\Service\Strategy\StackoverflowQuestionStrategy</parameter>
     </parameters>
 
     <services>
         <service id="mayflower.radar.api_strategy" class="%mayflower.radar.api_strategy.class%">
             <call method="addStrategy">
                 <argument type="service">
-                    <service class="Mayflower\PopularRadarBundle\Service\Strategy\GitHubForksStrategy" />
+                    <service class="%mayflower.strategy.github_forks.class%" />
                 </argument>
             </call>
 
             <call method="addStrategy">
                 <argument type="service">
-                    <service class="Mayflower\PopularRadarBundle\Service\Strategy\StackoverflowQuestionStrategy" />
+                    <service class="%mayflower.strategy.stackoverflow_questions.class%" />
                 </argument>
             </call>
         </service>

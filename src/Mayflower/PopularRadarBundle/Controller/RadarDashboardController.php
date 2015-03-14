@@ -46,25 +46,29 @@ class RadarDashboardController extends Controller
             try {
                 $internalResult = $comparator->compareBuzzwords($data);
 
-                $result = array_map(
-                    function ($value) {
-                        /** @var \Mayflower\PopularRadarBundle\Model\Buzzword[] $value */
-                        $isFirstLarger = $value[0]->getCountLength() > $value[1]->getCountLength();
-                        $isSame        = $value[1]->getCountLength() === $value[0]->getCountLength();
+                if (count($internalResult) === 0) {
+                    $responseData['noComparison'] = true;
+                } else {
+                    $result = array_map(
+                        function ($value) {
+                            /** @var \Mayflower\PopularRadarBundle\Model\Buzzword[] $value */
+                            $isFirstLarger = $value[0]->getCountLength() > $value[1]->getCountLength();
+                            $isSame        = $value[1]->getCountLength() === $value[0]->getCountLength();
 
-                        $firstBuzzword  =  $isFirstLarger ? $value[0] : $value[1];
-                        $secondBuzzword = !$isFirstLarger ? $value[0] : $value[1];
+                            $firstBuzzword  =  $isFirstLarger ? $value[0] : $value[1];
+                            $secondBuzzword = !$isFirstLarger ? $value[0] : $value[1];
 
-                        return array(
-                            'isSame' => $isSame,
-                            'first'  => $firstBuzzword->toArray(),
-                            'second' => $secondBuzzword->toArray()
-                        );
-                    },
-                    $internalResult
-                );
+                            return array(
+                                'isSame' => $isSame,
+                                'first'  => $firstBuzzword->toArray(),
+                                'second' => $secondBuzzword->toArray()
+                            );
+                        },
+                        $internalResult
+                    );
 
-                $responseData['comparisonResult'] = $result;
+                    $responseData['comparisonResult'] = $result;
+                }
             } catch (NoResultsException $ex) {
                 $responseData['noResults'] = true;
             }

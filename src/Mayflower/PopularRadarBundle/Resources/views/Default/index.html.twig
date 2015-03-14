@@ -21,6 +21,12 @@
                 </div>
             </div>
 
+            {% if noComparison is defined %}
+                <div class="alert alert-warning">
+                    <p>No comparisons selected!</p>
+                </div>
+            {% endif %}
+
             {% if comparisonResult is defined %}
                 <div class="panel panel-default">
                     <div class="panel-body">
@@ -38,15 +44,17 @@
                                         </div>
                                     {% endif %}
 
-                                    <b>First: {{ data.first.name }}</b>
-                                    <p>
-                                        {{ data.first.totalCount }} {{ data.first.resultTypeName }}
-                                    </p>
+                                    <div class="container">
+                                        <b>First: {{ data.first.name }}</b>
+                                        <p>
+                                            {{ data.first.totalCount }} {{ data.first.resultTypeName }}
+                                        </p>
 
-                                    <b>Second: {{ data.second.name }}</b>
-                                    <p>
-                                        {{ data.second.totalCount }} {{ data.second.resultTypeName }}
-                                    </p>
+                                        <b>Second: {{ data.second.name }}</b>
+                                        <p>
+                                            {{ data.second.totalCount }} {{ data.second.resultTypeName }}
+                                        </p>
+                                    </div>
                                 {% endfor %}
                             </p>
                         {% endif %}
