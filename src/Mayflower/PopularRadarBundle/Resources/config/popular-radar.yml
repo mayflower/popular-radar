@@ -1,0 +1,18 @@
+services:
+    mayflower.popular_radar.buzzword_form:
+        class: Mayflower\PopularRadarBundle\Form\Type\BuzzwordSearchType
+        arguments:
+            - @mayflower.popular_radar.strategy_storage
+        tags:
+            - { name: form.type, alias: mayflower_popular_radar_type }
+
+    mayflower.popular_radar.strategy_storage:
+        class: Mayflower\PopularRadarBundle\Model\Comparison\Strategy\StrategyStorage
+
+    mayflower.popular_radar.comparator:
+        class: Mayflower\PopularRadarBundle\Model\Comparison\BuzzwordDataComparator
+        arguments:
+            - @mayflower.popular_radar.strategy_storage
+
+    mayflower.popular_radar.guzzle.http_client:
+        class: GuzzleHttp\Client

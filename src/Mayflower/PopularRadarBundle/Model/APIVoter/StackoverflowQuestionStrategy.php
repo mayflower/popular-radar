@@ -1,39 +1,27 @@
 <?php
 
-namespace Mayflower\PopularRadarBundle\Service\Strategy;
+namespace Mayflower\PopularRadarBundle\Model\APIVoter;
 
-use Guzzle\Http\Client;
 use Mayflower\PopularRadarBundle\Exception\NoResultsException;
 use Mayflower\PopularRadarBundle\Form\Data\BuzzwordFormData;
-use Mayflower\PopularRadarBundle\Model\Buzzword;
+use Mayflower\PopularRadarBundle\Model\Comparison\Strategy\StrategyInterface;
+use Mayflower\PopularRadarBundle\Model\ResultMapping\Buzzword;
 
 /**
  * StackoverflowQuestionStrategy
  *
- * Strategy which compares stackoverflow questions
+ * Compares questions on stackoverflow
+ *
  * @author Maximilian Bosch <ma27.git@gmail.com>
  */
-class StackoverflowQuestionStrategy implements StrategyInterface
+class StackoverflowQuestionStrategy extends AbstractVoter implements StrategyInterface
 {
-    /**
-     * @var Client
-     */
-    private $client;
-
     /**
      * {@inheritdoc}
      */
     public function supports(BuzzwordFormData $formData)
     {
-        return $formData->isStackoverflowQuestions();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setHttpClient(Client $client)
-    {
-        $this->client = $client;
+        return in_array($this->getDisplayAlias(), $formData->getStrategies());
     }
 
     /**
@@ -47,9 +35,17 @@ class StackoverflowQuestionStrategy implements StrategyInterface
         $buzzword2 = $this->findTagFromStackOverflow($formData->getBuzzword2());
 
         return array(
-            new Buzzword($buzzword1['name'], $buzzword1['count'], $type),
-            new Buzzword($buzzword2['name'], $buzzword2['count'], $type)
+            new Buzzword($buzzword1['name'], $buzzword1['count'], $type, $this->getDisplayAlias()),
+            new Buzzword($buzzword2['name'], $buzzword2['count'], $type, $this->getDisplayAlias())
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDisplayAlias()
+    {
+        return 'Stackoverflow Questions';
     }
 
     /**
@@ -58,15 +54,21 @@ class StackoverflowQuestionStrategy implements StrategyInterface
      * @param string $buzzword
      *
      * @return array
+     *
+     * @throws NoResultsException If a specific tag could not be found
      */
     private function findTagFromStackOverflow($buzzword)
     {
-        $tagList = json_decode(gzdecode($this->client->get(
+        $client  = $this->getClient();
+        $request = $client->createRequest(
+            'GET',
             sprintf(
                 'http://api.stackexchange.com/2.2/tags?order=desc&sort=popular&inname=%s&site=stackoverflow',
                 $buzzword
             )
-        )->send()->getBody(true)), true);
+        );
+
+        $tagList = $client->send($request)->json();
 
         if (count($tagList['items']) === 0) {
             throw new NoResultsException;

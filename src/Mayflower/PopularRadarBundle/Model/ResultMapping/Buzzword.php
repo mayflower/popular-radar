@@ -1,6 +1,6 @@
 <?php
 
-namespace Mayflower\PopularRadarBundle\Model;
+namespace Mayflower\PopularRadarBundle\Model\ResultMapping;
 
 /**
  * Buzzword
@@ -27,17 +27,24 @@ class Buzzword
     private $resultTypeName;
 
     /**
+     * @var string
+     */
+    private $displayName;
+
+    /**
      * Constructor
      *
      * @param string $name
      * @param integer $countLength
      * @param string $resultTypeName
+     * @param string $displayName
      */
-    public function __construct($name, $countLength, $resultTypeName)
+    public function __construct($name, $countLength, $resultTypeName, $displayName)
     {
         $this->name           = (string) $name;
         $this->countLength    = (integer) $countLength;
         $this->resultTypeName = (string) $resultTypeName;
+        $this->displayName    = (string) $displayName;
     }
 
     /**
@@ -67,6 +74,14 @@ class Buzzword
     }
 
     /**
+     * @return string
+     */
+    public function getDisplayName()
+    {
+        return $this->displayName;
+    }
+
+    /**
      * Converts the data to an array
      *
      * @return array
@@ -76,7 +91,8 @@ class Buzzword
         return array(
             'name'           => $this->name,
             'totalCount'     => $this->countLength,
-            'resultTypeName' => $this->resultTypeName
+            'resultTypeName' => $this->resultTypeName,
+            'displayName'    => $this->displayName
         );
     }
 }

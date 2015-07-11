@@ -38,92 +38,50 @@ Installation script
 
 In order to provide many APIs without changing the whole code, the strategy pattern is used:
 
-At first you have to update the form stuff
+You just have too implement your custom api strategy:
+
 
 ``` php
-// src/Mayflower/PopularRadarBundle/Form/BuzzwordSearchType.php
-public function buildForm(FormBuilder $builder, array $options)
-{
-    // ...
-    ->add('use_custom_api', 'checkbox', array('required' => false, 'label' => 'Use custom api'))
-}
+namespace Mayflower\PopularRadarBundle\Model\APIVoter;
 
-// src/Mayflower/PopularRadarBundle/Form/DataBuzzwordFormData.php
-// ...
-private $useCustomApi = false;
-// ...
-public function setUseCustomApi($useCustomApi)
-{
-    $this->useCustomApi = (bool) $useCustomApi;
-    return $this;
-}
-
-public function isUseCustomApi()
-{
-    return $this->useCustomApi;
-}
-```
-
-Now you can implement the comparison strategy. This must contain the following methods:
-- setHttpClient:void (sets the guzzle client in order to communicate with apis)
-- supports:bool (checks if the user has enabled the comparison of this strategy)
-- apply:array (executes the comparison)
-
-The apply() method must return two Buzzword instances. This instance requires three paramters:
-- $name: name of the buzzword
-- $countLength: the comparison must return an integer (like *facebook likes*)
-- $resultTypeName: display name of the comparison (like *Facebook Like(s)*)
-
-The strategy class may look like this:
-
-``` php
-<?php
-
-namespace Mayflower\PopularRadarBundle\Service\Strategy;
-
-use Guzzle\Http\Client;
 use Mayflower\PopularRadarBundle\Form\Data\BuzzwordFormData;
-use Mayflower\PopularRadarBundle\Model\Buzzword;
+use Mayflower\PopularRadarBundle\Model\Comparison\Strategy\StrategyInterface;
+use Mayflower\PopularRadarBundle\Model\ResultMapping\Buzzword;
 
-class CustomAPIStrategy implements StrategyInterface
+class ExampleStrategy extends AbstractVoter implements StrategyInterface
 {
-    private $client;
-    
-    public function setHttpClient(Client $client)
-    {
-        $this->client = $client;
-    }
-    
     public function supports(BuzzwordFormData $data)
     {
-        // check if the user has selected the option in order to compare using this strategy
+        return in_array($this->getDisplayAlias(), $data->getStrategies());
     }
     
     public function apply(BuzzwordFormData $data)
     {
-        // compare buzzwords
-    
+        // fetch data from foreign api
+        
         return array(
-            new Buzzword($name, $countLength, $resultTypeName),
-            new Buzzword($name, $countLength, $resultTypeName)
+            new Buzzword(/* args */),
+            new Buzzword(/* args */)
         );
+    }
+    
+    public function getDisplayAlias()
+    {
+        return 'Example';
     }
 }
 ```
 
-Now you need to add this strategy to the comparator service, which is pretty simple:
+If you have a custom voter, you can use the *Mayflower\PopularRadarBundle\Model\APIVoter\AbstractGitHubVoter* which 
+provides a *findRepository()* method in order to search for git repositories hosted on github.
 
-``` xml
-<!-- src/Mayflower/PopularRadarBundle/Resources/config/services.xml -->
-<?xml version="1.0" ?>
-<!--- ... -->
-<service id="mayflower.radar.api_strategy" class="%mayflower.radar.api_strategy.class%">
-    <call method="addStrategy">
-        <argument type="service">
-            <service class="Mayflower\PopularRadarBundle\Service\Strategy\CustomAPIStrategy" />
-        </argument>
-    </call>
-    
-    <!-- ... -->
-</service>
+Now you just need to register the strategy
+
+``` yaml
+# config/voters.yml
+services:
+    mayflower.popular_radar.voter.example:
+        class: Mayflower\PopularRadarBundle\Model\APIVoter\ExampleStrategy
+        tags:
+            - { name: radar.voter }
 ```

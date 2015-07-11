@@ -7,15 +7,15 @@
         "psr-0": { "": "src/" }
     },
     "require": {
-        "php": ">=5.3.3",
-        "symfony/symfony": "2.6",
+        "php": ">=5.4",
+        "symfony/symfony": "2.7",
         "twig/extensions": "~1.0",
         "symfony/assetic-bundle": "~2.3",
         "symfony/monolog-bundle": "~2.4",
         "sensio/distribution-bundle": "~3.0,>=3.0.12",
         "sensio/framework-extra-bundle": "~3.0,>=3.0.2",
         "incenteev/composer-parameter-handler": "~2.0",
-        "guzzle/guzzle": "~3.9",
+        "guzzlehttp/guzzle": "~5",
         "sp/bower-bundle": "~0.11"
     },
     "require-dev": {

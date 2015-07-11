@@ -3,7 +3,6 @@
 namespace Mayflower\PopularRadarBundle\Controller;
 
 use Mayflower\PopularRadarBundle\Exception\NoResultsException;
-use Mayflower\PopularRadarBundle\Form\BuzzwordSearchType;
 use Mayflower\PopularRadarBundle\Form\Data\BuzzwordFormData;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -34,14 +33,14 @@ class RadarDashboardController extends Controller
     public function indexAction(Request $request)
     {
         $data = new BuzzwordFormData();
-        $form = $this->createForm(new BuzzwordSearchType(), $data);
+        $form = $this->createForm('mayflower_popular_radar_type', $data);
 
         $form->handleRequest($request);
 
         $responseData = array('form' => $form->createView());
-        if ($form->isValid()) {
-            /** @var \Mayflower\PopularRadarBundle\Service\ApiComparatorStrategy $comparator */
-            $comparator = $this->get('mayflower.radar.api_strategy');
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var \Mayflower\PopularRadarBundle\Model\Comparison\BuzzwordDataComparator $comparator */
+            $comparator = $this->get('mayflower.popular_radar.comparator');
 
             try {
                 $internalResult = $comparator->compareBuzzwords($data);
@@ -51,7 +50,7 @@ class RadarDashboardController extends Controller
                 } else {
                     $result = array_map(
                         function ($value) {
-                            /** @var \Mayflower\PopularRadarBundle\Model\Buzzword[] $value */
+                            /** @var \Mayflower\PopularRadarBundle\Model\ResultMapping\Buzzword[] $value */
                             $isFirstLarger = $value[0]->getCountLength() > $value[1]->getCountLength();
                             $isSame        = $value[1]->getCountLength() === $value[0]->getCountLength();
 
@@ -59,9 +58,10 @@ class RadarDashboardController extends Controller
                             $secondBuzzword = !$isFirstLarger ? $value[0] : $value[1];
 
                             return array(
-                                'isSame' => $isSame,
-                                'first'  => $firstBuzzword->toArray(),
-                                'second' => $secondBuzzword->toArray()
+                                'isSame'      =>  $isSame,
+                                'first'       =>  $firstBuzzword->toArray(),
+                                'second'      => $secondBuzzword->toArray(),
+                                'displayName' => $firstBuzzword->getDisplayName()
                             );
                         },
                         $internalResult

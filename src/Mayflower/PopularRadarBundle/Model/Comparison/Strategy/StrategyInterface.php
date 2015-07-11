@@ -1,8 +1,8 @@
 <?php
 
-namespace Mayflower\PopularRadarBundle\Service\Strategy;
+namespace Mayflower\PopularRadarBundle\Model\Comparison\Strategy;
 
-use Guzzle\Http\Client;
+use GuzzleHttp\Client;
 use Mayflower\PopularRadarBundle\Form\Data\BuzzwordFormData;
 
 /**
@@ -35,9 +35,16 @@ interface StrategyInterface
      *
      * @param BuzzwordFormData $formData
      *
-     * @return \Mayflower\PopularRadarBundle\Model\Buzzword
+     * @return \Mayflower\PopularRadarBundle\Model\ResultMapping\Buzzword
      *
      * @throws \Mayflower\PopularRadarBundle\Exception\NoResultsException If the buzzword cannot be found
      */
     public function apply(BuzzwordFormData $formData);
+
+    /**
+     * Returns the display name of a specific strategy
+     *
+     * @return string
+     */
+    public function getDisplayAlias();
 }

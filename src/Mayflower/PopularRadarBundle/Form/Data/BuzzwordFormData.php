@@ -22,14 +22,9 @@ class BuzzwordFormData
     private $buzzword2;
 
     /**
-     * @var bool
+     * @var string[]
      */
-    private $githubForks = false;
-
-    /**
-     * @var bool
-     */
-    private $stackoverflowQuestions = false;
+    private $strategies;
 
     /**
      * @return string
@@ -41,14 +36,20 @@ class BuzzwordFormData
 
     /**
      * @param string $buzzword1
+     *
+     * @return $this
      */
     public function setBuzzword1($buzzword1)
     {
-        $this->buzzword1 = (string) $buzzword1;
+        $this->buzzword1 = $buzzword1;
+
+        return $this;
     }
 
     /**
      * @return string
+     *
+     * @return $this
      */
     public function getBuzzword2()
     {
@@ -60,38 +61,28 @@ class BuzzwordFormData
      */
     public function setBuzzword2($buzzword2)
     {
-        $this->buzzword2 = (string) $buzzword2;
+        $this->buzzword2 = $buzzword2;
+
+        return $this;
     }
 
     /**
-     * @return boolean
+     * @return string[]
      */
-    public function isGithubForks()
+    public function getStrategies()
     {
-        return $this->githubForks;
+        return $this->strategies;
     }
 
     /**
-     * @param boolean $githubForks
+     * @param string[] $strategies
+     *
+     * @return $this
      */
-    public function setGithubForks($githubForks)
+    public function setStrategies($strategies)
     {
-        $this->githubForks = (bool) $githubForks;
-    }
+        $this->strategies = $strategies;
 
-    /**
-     * @return boolean
-     */
-    public function isStackoverflowQuestions()
-    {
-        return $this->stackoverflowQuestions;
-    }
-
-    /**
-     * @param boolean $stackoverflowQuestions
-     */
-    public function setStackoverflowQuestions($stackoverflowQuestions)
-    {
-        $this->stackoverflowQuestions = (bool) $stackoverflowQuestions;
+        return $this;
     }
 }

@@ -1,0 +1,9 @@
+services:
+    mayflower.popular_radar.voter.github_forks:
+        class: Mayflower\PopularRadarBundle\Model\APIVoter\GitHubForksStrategy
+        tags:
+            - { name: radar.voter }
+    mayflower.popular_radar.voter.stackoverflow_questions:
+        class: Mayflower\PopularRadarBundle\Model\APIVoter\StackoverflowQuestionStrategy
+        tags:
+            - { name: radar.voter }
