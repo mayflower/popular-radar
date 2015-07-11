@@ -1,0 +1,68 @@
+{% spaceless %}
+<!DOCTYPE html>
+<html lang="{{ app.request.locale }}">
+    <head>
+        <title>Mayflower Popular Radar</title>
+
+        {% stylesheets '@MayflowerPopularRadarBundle/Resources/public/vendor/bootstrap/dist/css/bootstrap.min.css' %}
+            <link rel="stylesheet" type="text/css" media="all" href="{{ asset_url }}" />
+        {% endstylesheets %}
+
+        {% javascripts '@MayflowerPopularRadarBundle/Resources/public/vendor/bootstrap/dist/js/bootstrap.min.js'
+                       '@MayflowerPopularRadarBundle/Resources/public/vendor/jquery/dist/jquery.min.js' %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+    </head>
+    <body>
+        <div class="container">
+            <h1>Mayflower Popular Radar</h1>
+            <div class="panel panel-default" style="margin-top: 30px;">
+                <div class="panel-body">
+                    {% include '@MayflowerPopularRadar/RadarDashboard/form.html.twig' %}
+                </div>
+            </div>
+
+            {% if noComparison is defined %}
+                <div class="alert alert-warning">
+                    <p>No comparisons selected!</p>
+                </div>
+            {% endif %}
+
+            {% if noResults is defined %}
+                <div class="alert alert-info">
+                    <p>No results found for the given buzzwords!</p>
+                </div>
+            {% endif %}
+
+            {% if comparisonResult is defined %}
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h4>Comparison results</h4>
+                        <p>
+                            {% for data in comparisonResult %}
+                                {% if data.isSame == true %}
+                                    <div class="alert alert-info">
+                                        <p>The result of the first and second buzzword is equal.</p>
+                                    </div>
+                                {% endif %}
+
+                                <div class="container">
+                                    <b>First: {{ data.first.name }}</b>
+                                    <p>
+                                        {{ data.first.totalCount }} {{ data.first.resultTypeName }}
+                                    </p>
+
+                                    <b>Second: {{ data.second.name }}</b>
+                                    <p>
+                                        {{ data.second.totalCount }} {{ data.second.resultTypeName }}
+                                    </p>
+                                </div>
+                            {% endfor %}
+                        </p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </body>
+</html>
+{% endspaceless %}

@@ -29,7 +29,7 @@ class RadarDashboardController extends Controller
      *
      * @Method({"GET", "POST"})
      * @Route("/")
-     * @Template("@MayflowerPopularRadar/Default/index.html.twig")
+     * @Template()
      */
     public function indexAction(Request $request)
     {
