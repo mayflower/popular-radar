@@ -22,46 +22,43 @@
                 </div>
             </div>
 
-            {% if noComparison is defined %}
+            {% if no_comparison is defined %}
                 <div class="alert alert-warning">
                     <p>No comparisons selected!</p>
                 </div>
-            {% endif %}
+            {% else %}
+                {% if result is defined %}
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h4>Comparison results</h4>
+                            <p>
+                                {% for data in result %}
+                                    <div class="container">
+                                        {% if data.failed %}
+                                            <h3>{{ data.error_model.displayName }}</h3>
+                                            <p>
+                                                <b class="text-danger">No results found for the given buzzwords on <q>{{ data.error_model.displayName }}</q>!</b>
+                                            </p>
+                                        {% else %}
+                                            {% if data.is_same == true %}
+                                                <div class="alert alert-info">
+                                                    <p>The result of the first and second buzzword is equal.</p>
+                                                </div>
+                                            {% endif %}
 
-            {% if noResults is defined %}
-                <div class="alert alert-info">
-                    <p>No results found for the given buzzwords!</p>
-                </div>
-            {% endif %}
+                                            <h3>{{ data.display_name }}</h3>
+                                            <b>First: {{ data.first.name }}</b>
+                                            <p>{{ data.first.totalCount }} {{ data.first.resultTypeName }}</p>
 
-            {% if comparisonResult is defined %}
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <h4>Comparison results</h4>
-                        <p>
-                            {% for data in comparisonResult %}
-                                {% if data.isSame == true %}
-                                    <div class="alert alert-info">
-                                        <p>The result of the first and second buzzword is equal.</p>
+                                            <b>Second: {{ data.second.name }}</b>
+                                            <p>{{ data.second.totalCount }} {{ data.second.resultTypeName }}</p>
+                                        {% endif %}
                                     </div>
-                                {% endif %}
-
-                                <div class="container">
-                                    <h3>{{ data.displayName }}</h3>
-                                    <b>First: {{ data.first.name }}</b>
-                                    <p>
-                                        {{ data.first.totalCount }} {{ data.first.resultTypeName }}
-                                    </p>
-
-                                    <b>Second: {{ data.second.name }}</b>
-                                    <p>
-                                        {{ data.second.totalCount }} {{ data.second.resultTypeName }}
-                                    </p>
-                                </div>
-                            {% endfor %}
-                        </p>
+                                {% endfor %}
+                            </p>
+                        </div>
                     </div>
-                </div>
+                {% endif %}
             {% endif %}
         </div>
     </body>

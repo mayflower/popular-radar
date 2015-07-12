@@ -2,8 +2,10 @@
 
 namespace Mayflower\PopularRadarBundle\Model\Comparison;
 
+use Mayflower\PopularRadarBundle\Exception\NoResultsException;
 use Mayflower\PopularRadarBundle\Form\Data\BuzzwordFormData;
 use Mayflower\PopularRadarBundle\Model\Comparison\Strategy\StrategyStorage;
+use Mayflower\PopularRadarBundle\Model\ResultMapping\FailedCompare;
 
 /**
  * BuzzwordDataComparator
@@ -43,7 +45,15 @@ class BuzzwordDataComparator
                 continue;
             }
 
-            $result[] = $strategy->apply($data);
+            try {
+                $result[] = $strategy->apply($data);
+            } catch (NoResultsException $ex) {
+                $errorModel = new FailedCompare();
+                $errorModel->setException($ex);
+                $errorModel->setDisplayName($strategy->getDisplayAlias());
+
+                $result[] = $errorModel;
+            }
         }
 
         return $result;

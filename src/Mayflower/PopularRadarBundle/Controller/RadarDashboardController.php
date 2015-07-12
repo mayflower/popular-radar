@@ -2,8 +2,8 @@
 
 namespace Mayflower\PopularRadarBundle\Controller;
 
-use Mayflower\PopularRadarBundle\Exception\NoResultsException;
 use Mayflower\PopularRadarBundle\Form\Data\BuzzwordFormData;
+use Mayflower\PopularRadarBundle\Model\ResultMapping\FailedCompare;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -40,37 +40,38 @@ class RadarDashboardController extends Controller
         $responseData = array('form' => $form->createView());
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var \Mayflower\PopularRadarBundle\Model\Comparison\BuzzwordDataComparator $comparator */
-            $comparator = $this->get('mayflower.popular_radar.comparator');
+            $comparator     = $this->get('mayflower.popular_radar.comparator');
+            $internalResult = $comparator->compareBuzzwords($data);
 
-            try {
-                $internalResult = $comparator->compareBuzzwords($data);
-
-                if (count($internalResult) === 0) {
-                    $responseData['noComparison'] = true;
-                } else {
-                    $result = array_map(
-                        function ($value) {
-                            /** @var \Mayflower\PopularRadarBundle\Model\ResultMapping\Buzzword[] $value */
-                            $isFirstLarger = $value[0]->getCountLength() > $value[1]->getCountLength();
-                            $isSame        = $value[1]->getCountLength() === $value[0]->getCountLength();
-
-                            $firstBuzzword  =  $isFirstLarger ? $value[0] : $value[1];
-                            $secondBuzzword = !$isFirstLarger ? $value[0] : $value[1];
-
+            if (count($internalResult) > 0) {
+                $responseData['result'] = array_map(
+                    function ($value) {
+                        if ($value instanceof FailedCompare) {
                             return array(
-                                'isSame'      =>  $isSame,
-                                'first'       =>  $firstBuzzword->toArray(),
-                                'second'      => $secondBuzzword->toArray(),
-                                'displayName' => $firstBuzzword->getDisplayName()
+                                'failed'      => true,
+                                'error_model' => $value
                             );
-                        },
-                        $internalResult
-                    );
+                        }
 
-                    $responseData['comparisonResult'] = $result;
-                }
-            } catch (NoResultsException $ex) {
-                $responseData['noResults'] = true;
+                        /** @var \Mayflower\PopularRadarBundle\Model\ResultMapping\Buzzword[] $value */
+                        $isFirstLarger = $value[0]->getCountLength() > $value[1]->getCountLength();
+                        $isSame        = $value[1]->getCountLength() === $value[0]->getCountLength();
+
+                        $firstBuzzword  =  $isFirstLarger ? $value[0] : $value[1];
+                        $secondBuzzword = !$isFirstLarger ? $value[0] : $value[1];
+
+                        return array(
+                            'is_same'      => $isSame,
+                            'first'        => $firstBuzzword->toArray(),
+                            'second'       => $secondBuzzword->toArray(),
+                            'display_name' => $firstBuzzword->getDisplayName(),
+                            'failed'       => false
+                        );
+                    },
+                    $internalResult
+                );
+            } else {
+                $responseData['no_comparison'] = true;
             }
         }
 
