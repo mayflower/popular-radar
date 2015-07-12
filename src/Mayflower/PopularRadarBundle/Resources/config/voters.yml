@@ -7,3 +7,23 @@ services:
         class: Mayflower\PopularRadarBundle\Model\APIVoter\StackoverflowQuestionStrategy
         tags:
             - { name: radar.voter }
+
+    mayflower.popular_radar.voter.packagist_downloads:
+        class: Mayflower\PopularRadarBundle\Model\APIVoter\PackagistDownloadsVoter
+        tags:
+            - { name: radar.voter }
+
+    mayflower.popular_radar.voter.packagist_favers:
+        class: Mayflower\PopularRadarBundle\Model\APIVoter\PackagistFaversVoter
+        tags:
+            - { name: radar.voter }
+
+    mayflower.popular_radar.voter.github_stargazers:
+        class: Mayflower\PopularRadarBundle\Model\APIVoter\GitHubStargazersVoter
+        tags:
+            - { name: radar.voter }
+
+    mayflower.popular_radar.voter.github_followers:
+        class: Mayflower\PopularRadarBundle\Model\APIVoter\GitHubFollowersVoter
+        tags:
+            - { name: radar.voter }
