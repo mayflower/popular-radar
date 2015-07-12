@@ -30,8 +30,8 @@ class GitHubForksStrategy extends AbstractGitHubVoter implements StrategyInterfa
     {
         $type = 'fork(s) on GitHub';
 
-        $buzzword1 = $this->findRepository($formData->getBuzzword1());
-        $buzzword2 = $this->findRepository($formData->getBuzzword2());
+        $buzzword1 = $this->findRepositoryBySearchTerm($formData->getBuzzword1());
+        $buzzword2 = $this->findRepositoryBySearchTerm($formData->getBuzzword2());
 
         return array(
             new Buzzword(

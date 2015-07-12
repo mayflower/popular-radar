@@ -18,11 +18,11 @@ abstract class AbstractGitHubVoter extends AbstractVoter
      *
      * @param string $buzzword
      *
-     * @return integer
+     * @return array
      *
      * @throws NoResultsException
      */
-    protected function findRepository($buzzword)
+    protected function findRepositoryBySearchTerm($buzzword)
     {
         $client  = $this->getClient();
         $request = $client->createRequest(
