@@ -40,13 +40,13 @@
                                                 <b class="text-danger">No results found for the given buzzwords on <q>{{ data.error_model.displayName }}</q>!</b>
                                             </p>
                                         {% else %}
+                                            <h3>{{ data.display_name }}</h3>
                                             {% if data.is_same == true %}
-                                                <div class="alert alert-info">
-                                                    <p>The result of the first and second buzzword is equal.</p>
-                                                </div>
+                                                <p>
+                                                    <b class="text-warning">The result of the first and second buzzword is equal.</b>
+                                                </p>
                                             {% endif %}
 
-                                            <h3>{{ data.display_name }}</h3>
                                             <b>First: {{ data.first.name }}</b>
                                             <p>{{ data.first.totalCount }} {{ data.first.resultTypeName }}</p>
 
